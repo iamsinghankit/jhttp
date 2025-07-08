@@ -1,0 +1,59 @@
+package com.singhankit.jhttp.internal;
+
+import com.singhankit.jhttp.JHttp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+
+/**
+ * @author ankitsingh
+ */
+class HttpRequestHandler implements Runnable, RequestHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(HttpRequestHandler.class);
+    private final Socket clientSocket;
+    private final JHttp jHttp;
+
+
+    public HttpRequestHandler(Socket socket, JHttp jHttp) {
+        this.clientSocket = socket;
+        this.jHttp = jHttp;
+    }
+
+    @Override
+    public void run() {
+        handle();
+    }
+
+    @Override
+    public void handle() {
+        try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
+            String requestLine = in.readLine();
+            //requestLine is normally empty for OPTIONS request.
+            if(Util.isEmpty(requestLine)) {
+                return;
+            }
+            LOG.info("RequestLine: " + requestLine);
+
+            var request = Request.of(in, out, requestLine);
+            var requestHandler = switch(request.method()) {
+                case GET -> new GetRequestHandler(request, jHttp);
+                case POST -> new PostRequestHandler(request, jHttp);
+                default -> throw new IllegalStateException("Unexpected value: " + request.method());
+            };
+
+            requestHandler.handle();
+
+        } catch(IOException e) {
+            LOG.error("Error occurred while handling request", e);
+        } finally {
+            Util.close(clientSocket);
+        }
+    }
+}
