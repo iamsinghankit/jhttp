@@ -62,7 +62,7 @@ abstract class ReqBodyHandler implements RequestHandler {
         for(RequestMapping requestMapping : requestMappings) {
             boolean result = route.extract(requestMapping.getPath(), req.path());
             if(result) {
-                var request = new HttpRequest(req.headers(), req.path(), req.method(), body, route.getPathVariables(), route.getQueryParams());
+                var request = new HttpRequest(req.headers(), requestMapping.getPath(), req.method(), body, route.getPathVariables(), route.getQueryParams());
                 return new HandlerAndRequest(requestMapping.getRequestHandler(), request);
             }
         }
@@ -76,7 +76,8 @@ abstract class ReqBodyHandler implements RequestHandler {
         } else if(mappings.size() > 1) {
             throw new HttpClientException(HttpStatus.NOT_FOUND, "More than one request mapping found for path: " + req.path());
         } else {
-            return new HandlerAndRequest(mappings.getFirst().getRequestHandler(), new HttpRequest(req.headers(), req.path(), req.method(), body, Map.of(), Map.of()));
+            var requestMapping = mappings.getFirst();
+            return new HandlerAndRequest(requestMapping.getRequestHandler(), new HttpRequest(req.headers(), requestMapping.getPath(), req.method(), body, Map.of(), Map.of()));
         }
     }
 
