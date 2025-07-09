@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,12 +28,10 @@ public class JHttp {
     }
 
     public static JHttpBuilder defaults() {
+        int defaultPort = 9090;
+        String defaultThreadName = "jhttp-thread-";
         var builder = new JHttpBuilder();
-        return builder
-                .port(8080)
-                .serverThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual()
-                                                                           .name("jhttpserver-thread-", 1)
-                                                                           .factory()));
+        return builder.port(defaultPort).serverThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual().name(defaultThreadName, 1).factory()));
     }
 
     public static JHttpBuilder of() {
@@ -43,36 +42,22 @@ public class JHttp {
         return port;
     }
 
-    public List<RequestMapping> getRequestMappings() {
-        return requestMappings;
+    public List<RequestMapping> getRequestMappings(String method) {
+        return getRequestMappings(p -> p.getMethod().equalCheck(method));
     }
 
-     RequestMapping getRequestMapping(String path, String method) {
-        var requests = requestMappings.stream()
-                                      .filter(m -> m.getPath().equals(path) &&
-                                              m.getMethod().equalCheck((method)))
-                                      .toList();
-        if(requests.isEmpty()) {
-            throw new IllegalStateException("No request mapping found for path: " + path);
-        } else if(requests.size() > 1) {
-            throw new IllegalStateException("More than one request mapping found for path: " + path);
-        } else {
-            return requests.getFirst();
-        }
+    public List<RequestMapping> getRequestMappings(String path, String method) {
+        return getRequestMappings(p -> p.getPath().equals(path) && p.getMethod().equalCheck(method));
     }
-    public RequestMapping getRequestMapping(String path, String method, String mediaType) {
-        var requests = requestMappings.stream()
-                                      .filter(m -> m.getPath().equals(path) &&
-                                              m.getMediaType().equalCheck(mediaType) &&
-                                              m.getMethod().equalCheck((method)))
-                                      .toList();
-        if(requests.isEmpty()) {
-            throw new IllegalStateException("No request mapping found for path: " + path);
-        } else if(requests.size() > 1) {
-            throw new IllegalStateException("More than one request mapping found for path: " + path);
-        } else {
-            return requests.getFirst();
-        }
+
+    public List<RequestMapping> getRequestMappings(String path, String method, String mediaType) {
+        return getRequestMappings(p -> p.getPath().equals(path) &&
+                p.getMethod().equalCheck(method) &&
+                p.getMediaType().equalCheck(mediaType));
+    }
+
+    private List<RequestMapping> getRequestMappings(Predicate<RequestMapping> predicate) {
+        return requestMappings.stream().filter(predicate).toList();
     }
 
     public ExecutorService getServerThreadPool() {

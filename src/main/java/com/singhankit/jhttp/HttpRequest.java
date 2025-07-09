@@ -1,7 +1,10 @@
 package com.singhankit.jhttp;
 
+import java.util.Map;
+
 /**
  * @author Ankit Singh
  */
-public record HttpRequest(String body) {
-}
+public record HttpRequest(HttpHeaders headers, String body, Map<String, String> pathVariables,
+                          Map<String, String> params) {}
+

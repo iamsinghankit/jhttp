@@ -6,18 +6,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Objects;
 
 /**
  * @author Ankit Singh
  */
- class JHttpServer implements Server {
+class JHttpServer implements Server {
     private static final Logger LOG = LoggerFactory.getLogger(JHttpServer.class);
-
-    private volatile boolean isRunning ;
-    private ServerSocket server;
     private final JHttp jHttp;
+    private volatile boolean isRunning;
+    private ServerSocket server;
 
-     JHttpServer(JHttp jHttp) {
+    JHttpServer(JHttp jHttp) {
         this.isRunning = true;
         this.jHttp = jHttp;
     }
@@ -25,11 +25,14 @@ import java.net.ServerSocket;
 
     public synchronized void start() {
         try {
+            if(Objects.nonNull(server) && !server.isClosed()) {
+                throw new IllegalStateException("JHttp server already started");
+            }
             server = new ServerSocket(jHttp.getPort());
             LOG.info("JHttp server started on port: {}", jHttp.getPort());
             while(isRunning) {
                 var client = server.accept();
-                jHttp.getServerThreadPool().execute(new HttpRequestHandler(client,jHttp));
+                jHttp.getServerThreadPool().execute(new HttpRequestHandler(client, jHttp));
             }
         } catch(IOException ex) {
             LOG.error("Error occurred while waiting for client", ex);
@@ -39,7 +42,7 @@ import java.net.ServerSocket;
     @Override
     public synchronized void stop() {
         if(!isRunning && server.isClosed()) {
-            LOG.warn("JHttp server is already stopped");
+            LOG.info("JHttp server is already stopped");
             return;
         }
         LOG.info("Stopping JHttpServer...");

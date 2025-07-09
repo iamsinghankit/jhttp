@@ -10,9 +10,9 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     void main() {
-        var helloMapping = RequestMapping.POST()
-                                           .path("/hello/")
-                                           .mediaType(MediaType.APPLICATION_JSON)
+        var helloMapping = RequestMapping.GET()
+                                           .path("/hello")
+//                                           .mediaType(MediaType.APPLICATION_JSON)
                                            .requestHandler(handleRequest())
                                            .build();
         JHttp jHttp = JHttp.defaults()
@@ -21,14 +21,10 @@ public class Main {
         jHttp.start();
     }
 
-    static HttpRequestHandler handleRequest(){
+     HttpRequestHandler handleRequest(){
         return (request)->{
             LOG.info("Received: {}",request);
-            return new HttpResponse(HttpStatus.ACCEPTED,null, """
-                    {
-                     "sample":true
-                    }
-                    """);
+            return new HttpResponse(request.headers().add("Content-Type","application/json"),HttpStatus.OK, null);
         };
     }
 }

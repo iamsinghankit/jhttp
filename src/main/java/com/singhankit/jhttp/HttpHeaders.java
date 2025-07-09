@@ -5,14 +5,19 @@ import com.singhankit.jhttp.internal.Util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
  * @author Ankit Singh
  */
-public class HttpHeaders {
+public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
 
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_LENGTH = "Content-Length";
     private final Map<String, String> headers;
 
     public HttpHeaders(Map<String, String> headers) {
@@ -37,14 +42,32 @@ public class HttpHeaders {
         return headers;
     }
 
-    public void add(String key, String value) {
+    public HttpHeaders add(String key, String value) {
         if(Util.isEmpty(key) || Util.isEmpty(value)) {
             throw new IllegalArgumentException("Header key/value cannot be empty");
         }
         headers.put(key, value);
+        return this;
+    }
+
+    public HttpHeaders addAll(HttpHeaders headers) {
+        if(Objects.nonNull(headers)) {
+            headers.forEach(e -> this.add(e.getKey(), e.getValue()));
+        }
+        return this;
+    }
+
+    public HttpHeaders addAll(Map<String, String> headers) {
+        headers.forEach(this::add);
+        return this;
     }
 
     public Optional<String> get(String key) {
         return Optional.ofNullable(headers.get(key));
+    }
+
+    @Override
+    public Iterator<Entry<String, String>> iterator() {
+        return headers.entrySet().iterator();
     }
 }
