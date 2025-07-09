@@ -36,7 +36,6 @@ class HttpRequestHandler implements Runnable, RequestHandler {
         try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
             String requestLine = in.readLine();
-            //requestLine is normally empty for OPTIONS request.
             if(Util.isEmpty(requestLine)) {
                 return;
             }
@@ -46,10 +45,9 @@ class HttpRequestHandler implements Runnable, RequestHandler {
                 case GET -> new ResBodyAllowedHandler(request, jHttp);
                 case POST, PUT, PATCH, DELETE -> new ReqResAllowedHandler(request, jHttp);
                 case TRACE, OPTIONS, HEAD -> new ResBodyNotAllowedHandler(request, jHttp);
+                case UNKNOWN -> () -> {};
             };
-
             requestHandler.handle();
-
         } catch(IOException e) {
             LOG.error("Error occurred while handling request", e);
         } finally {

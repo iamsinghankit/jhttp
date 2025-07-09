@@ -57,7 +57,7 @@ interface RequestHandler {
     }
 
     private String addResHeaders(HttpHeaders headers) {
-        headers.add("Connection", "Closed");
+        headers.add("Connection", "close");
         headers.add("Server", "JHttp");
         var res = new StringBuilder();
         headers.forEach(e -> res.append(e.getKey()).append(SEP).append(e.getValue()).append(LINE_END));

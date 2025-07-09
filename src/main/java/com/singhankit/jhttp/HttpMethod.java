@@ -12,7 +12,8 @@ public enum HttpMethod {
     HEAD,
     OPTIONS,
     PATCH,
-    TRACE;
+    TRACE,
+    UNKNOWN;
 
 
     public static HttpMethod of(String method) {
@@ -25,7 +26,7 @@ public enum HttpMethod {
             case "OPTIONS" -> HttpMethod.OPTIONS;
             case "PATCH" -> HttpMethod.PATCH;
             case "TRACE" -> HttpMethod.TRACE;
-            case null, default -> throw new IllegalStateException("Unexpected method: " + method);
+            case null, default -> HttpMethod.UNKNOWN;
         };
     }
 
