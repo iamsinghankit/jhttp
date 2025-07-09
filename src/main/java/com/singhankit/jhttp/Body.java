@@ -1,4 +1,4 @@
-package com.singhankit.jhttp.internal;
+package com.singhankit.jhttp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +41,11 @@ public class Body {
     }
 
     public boolean isMultipart() {
-        return contentType != null && contentType.startsWith("multipart/form-data");
+        return contentType != null && contentType.startsWith(MediaType.MULTIPART_FORM_DATA.value());
     }
 
     public boolean isUrlEncoded() {
-        return contentType != null && contentType.startsWith("application/x-www-form-urlencoded");
+        return contentType != null && contentType.startsWith(MediaType.URLENCODED.value());
     }
 
     public boolean isRaw() {

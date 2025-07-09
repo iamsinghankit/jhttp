@@ -17,13 +17,18 @@ public class JHttp {
 
     private final Integer port;
     private final List<RequestMapping> requestMappings;
+    private final List<RequestInterceptor> requestInterceptors;
+    private final List<ResponseInterceptor> responseInterceptors;
     private final ExecutorService serverThreadPool;
     private Server httpServer;
 
-    private JHttp(int port, List<RequestMapping> requestMappings, ExecutorService serverThreadPool) {
+    private JHttp(int port, List<RequestMapping> requestMappings, List<RequestInterceptor> requestInterceptors,
+                  List<ResponseInterceptor> responseInterceptors,ExecutorService serverThreadPool) {
         this.port = port;
         this.requestMappings = requestMappings;
         this.serverThreadPool = serverThreadPool;
+        this.requestInterceptors = requestInterceptors;
+        this.responseInterceptors = responseInterceptors;
     }
 
     public static JHttpBuilder defaults() {
@@ -63,6 +68,14 @@ public class JHttp {
         return serverThreadPool;
     }
 
+    public List<RequestInterceptor> getRequestInterceptors() {
+        return requestInterceptors;
+    }
+
+    public List<ResponseInterceptor> getResponseInterceptors() {
+        return responseInterceptors;
+    }
+
     void start() {
         httpServer = Server.createHttpServer(this);
         httpServer.start();
@@ -77,9 +90,13 @@ public class JHttp {
         private final List<RequestMapping> requestMappings;
         private Integer port;
         private ExecutorService serverThreadPool;
+        private final List<RequestInterceptor> requestInterceptors;
+        private final List<ResponseInterceptor> responseInterceptors;
 
         JHttpBuilder() {
             this.requestMappings = new ArrayList<>();
+            this.requestInterceptors = new ArrayList<>();
+            this.responseInterceptors = new ArrayList<>();
         }
 
 
@@ -99,6 +116,25 @@ public class JHttp {
             return this;
         }
 
+        public JHttpBuilder addRequestInterceptor(RequestInterceptor requestInterceptor) {
+            requestInterceptors.add(requestInterceptor);
+            return this;
+        }
+
+        public JHttpBuilder addRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
+            this.requestInterceptors.addAll(requestInterceptors);
+            return this;
+        }
+        public JHttpBuilder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
+            responseInterceptors.add(responseInterceptor);
+            return this;
+        }
+
+        public JHttpBuilder addResponseInterceptors(List<ResponseInterceptor> responseInterceptor) {
+            this.responseInterceptors.addAll(responseInterceptor);
+            return this;
+        }
+
         public JHttpBuilder serverThreadPool(ExecutorService serverThreadPool) {
             this.serverThreadPool = serverThreadPool;
             return this;
@@ -108,7 +144,7 @@ public class JHttp {
             requireNonNull(port);
             requireNonNull(serverThreadPool);
             Util.requireNonEmpty(requestMappings, "request mappings cannot be empty");
-            return new JHttp(port, requestMappings, serverThreadPool);
+            return new JHttp(port, requestMappings,requestInterceptors,responseInterceptors, serverThreadPool);
         }
 
     }

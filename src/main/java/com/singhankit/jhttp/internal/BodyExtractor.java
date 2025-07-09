@@ -1,9 +1,10 @@
 package com.singhankit.jhttp.internal;
 
+import com.singhankit.jhttp.Body;
 import com.singhankit.jhttp.HttpClientException;
 import com.singhankit.jhttp.HttpStatus;
 import com.singhankit.jhttp.MediaType;
-import com.singhankit.jhttp.internal.Body.FilePart;
+import com.singhankit.jhttp.Body.FilePart;
 
 import java.io.IOException;
 import java.net.URLDecoder;

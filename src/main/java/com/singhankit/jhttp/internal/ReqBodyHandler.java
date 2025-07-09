@@ -1,5 +1,6 @@
 package com.singhankit.jhttp.internal;
 
+import com.singhankit.jhttp.Body;
 import com.singhankit.jhttp.HttpClientException;
 import com.singhankit.jhttp.HttpRequest;
 import com.singhankit.jhttp.HttpRequestHandler;
@@ -23,10 +24,31 @@ abstract class ReqBodyHandler implements RequestHandler {
         this.jHttp = jHttp;
     }
 
-    HttpResponse doHandle(){
+    HttpResponse doHandle() {
         Body body = readBody();
         var handlerAndRequest = getHandlerAndRequest(body);
-        return handlerAndRequest.handler().handle(handlerAndRequest.request());
+        executeRequestInterceptors(handlerAndRequest.request());
+        HttpResponse httpResponse = handlerAndRequest.handler().handle(handlerAndRequest.request());
+        executeResponseInterceptors(httpResponse);
+        return httpResponse;
+    }
+
+    private void executeRequestInterceptors(HttpRequest request) {
+        for(var requestInterceptor : jHttp.getRequestInterceptors()) {
+            if(requestInterceptor.intercept(request)) {
+                continue;
+            }
+            break;
+        }
+    }
+
+    private void executeResponseInterceptors(HttpResponse response) {
+        for(var responseInterceptor : jHttp.getResponseInterceptors()) {
+            if(responseInterceptor.intercept(response)) {
+                continue;
+            }
+            break;
+        }
     }
 
     private Body readBody() {
@@ -40,7 +62,7 @@ abstract class ReqBodyHandler implements RequestHandler {
         for(RequestMapping requestMapping : requestMappings) {
             boolean result = route.extract(requestMapping.getPath(), req.path());
             if(result) {
-                var request = new HttpRequest(req.headers(), body, route.getPathVariables(), route.getQueryParams());
+                var request = new HttpRequest(req.headers(), req.path(), req.method(), body, route.getPathVariables(), route.getQueryParams());
                 return new HandlerAndRequest(requestMapping.getRequestHandler(), request);
             }
         }
@@ -54,7 +76,7 @@ abstract class ReqBodyHandler implements RequestHandler {
         } else if(mappings.size() > 1) {
             throw new HttpClientException(HttpStatus.NOT_FOUND, "More than one request mapping found for path: " + req.path());
         } else {
-            return new HandlerAndRequest(mappings.getFirst().getRequestHandler(), new HttpRequest(req.headers(), body, Map.of(), Map.of()));
+            return new HandlerAndRequest(mappings.getFirst().getRequestHandler(), new HttpRequest(req.headers(), req.path(), req.method(), body, Map.of(), Map.of()));
         }
     }
 

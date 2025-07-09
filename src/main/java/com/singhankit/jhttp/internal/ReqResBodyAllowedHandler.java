@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Ankit Singh
  */
-class ReqResAllowedHandler extends ReqBodyHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(ReqResAllowedHandler.class);
+class ReqResBodyAllowedHandler extends ReqBodyHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ReqResBodyAllowedHandler.class);
 
-    ReqResAllowedHandler(Request req, JHttp jHttp) {
+    ReqResBodyAllowedHandler(Request req, JHttp jHttp) {
         super(req, jHttp);
     }
 

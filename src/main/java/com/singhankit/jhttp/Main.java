@@ -20,8 +20,24 @@ public class Main {
 
         JHttp jHttp = JHttp.defaults()
                            .addMappings(mappings)
+                           .addRequestInterceptor(addHeaderInRequest())
+                           .addResponseInterceptor(addHeaderInResponse())
                            .build();
         jHttp.start();
+    }
+
+    private ResponseInterceptor addHeaderInResponse(){
+        return response-> {
+            response.headers().add("ResponseInterceptor","Testing");
+            return true;
+        };
+    }
+
+    private RequestInterceptor addHeaderInRequest(){
+        return request-> {
+            request.headers().add("RequestInterceptor","Testing");
+            return true;
+        };
     }
 
     HttpRequestHandler handleGetRequest() {

@@ -43,7 +43,7 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             var request = Request.of(in, out, requestLine);
             RequestHandler requestHandler = switch(request.method()) {
                 case GET -> new ResBodyAllowedHandler(request, jHttp);
-                case POST, PUT, PATCH, DELETE -> new ReqResAllowedHandler(request, jHttp);
+                case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(request, jHttp);
                 case TRACE, OPTIONS, HEAD -> new ResBodyNotAllowedHandler(request, jHttp);
                 case UNKNOWN -> () -> {};
             };
