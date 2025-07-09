@@ -7,6 +7,10 @@ public enum MediaType {
 
     APPLICATION_JSON("application/json"),
     APPLICATION_XML("application/xml"),
+    MULTIPART_FORM_DATA("multipart/form-data"),
+    URLENCODED("application/x-www-form-urlencoded"),
+    BINARY("application/octet-stream"),
+    TEXT_HTML("text/html"),
     TEXT("text/plain");
 
     private final String value;

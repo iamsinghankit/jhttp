@@ -40,14 +40,12 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             if(Util.isEmpty(requestLine)) {
                 return;
             }
-
             LOG.debug("Request: {}", requestLine);
             var request = Request.of(in, out, requestLine);
             RequestHandler requestHandler = switch(request.method()) {
-                case GET -> new GetRequestHandler(request, jHttp);
-                case POST -> new PostRequestHandler(request, jHttp);
-                case PUT -> new PutRequestHandler(request, jHttp);
-                default -> throw new IllegalStateException("Unexpected value: " + request.method());
+                case GET -> new ResBodyAllowedHandler(request, jHttp);
+                case POST, PUT, PATCH, DELETE -> new ReqResAllowedHandler(request, jHttp);
+                case TRACE, OPTIONS, HEAD -> new ResBodyNotAllowedHandler(request, jHttp);
             };
 
             requestHandler.handle();
