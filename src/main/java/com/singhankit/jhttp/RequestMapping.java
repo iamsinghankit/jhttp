@@ -1,12 +1,9 @@
 package com.singhankit.jhttp;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Ankit Singh
  */
 public class RequestMapping {
-
 
     private final String path;
     private final HttpMethod method;
@@ -44,6 +41,10 @@ public class RequestMapping {
         return new POSTBuilder();
     }
 
+    public static PUTBuilder PUT() {
+        return new PUTBuilder();
+    }
+
     public static class GETBuilder extends RequestMappingBuilder {
         @Override
         public GETBuilder path(String path) {
@@ -56,9 +57,34 @@ public class RequestMapping {
         }
 
         public RequestMapping build() {
-            requireNonNull(path, "path is required");
-            requireNonNull(requestHandler,"request handler is required");
+            Util.requireNonNull(path, "path is required");
+            Util.requireNonNull(requestHandler,"request handler is required");
             return new RequestMapping(path, HttpMethod.GET, requestHandler, null);
+        }
+    }
+
+    public static class PUTBuilder extends POSTBuilder{
+
+        @Override
+        public PUTBuilder mediaType(MediaType mediaType) {
+            return (PUTBuilder)super.mediaType(mediaType);
+        }
+
+        @Override
+        public PUTBuilder path(String path) {
+            return (PUTBuilder)super.path(path);
+        }
+
+        @Override
+        public PUTBuilder requestHandler(HttpRequestHandler requestHandler) {
+            return (PUTBuilder)super.requestHandler(requestHandler);
+        }
+
+        @Override
+        public RequestMapping build() {
+            Util.requireNonNull(path, "path is required");
+            Util.requireNonNull(requestHandler,"request handler is required");
+            return new RequestMapping(path, HttpMethod.PUT, requestHandler, mediaType);
         }
     }
 
@@ -82,9 +108,8 @@ public class RequestMapping {
         }
 
         public RequestMapping build() {
-            requireNonNull(path, "path is required");
-            requireNonNull(mediaType, "mediaType is required");
-            requireNonNull(requestHandler,"request handler is required");
+            Util.requireNonNull(path, "path is required");
+            Util.requireNonNull(requestHandler,"request handler is required");
             return new RequestMapping(path, HttpMethod.POST, requestHandler, mediaType);
         }
     }

@@ -5,7 +5,9 @@ package com.singhankit.jhttp;
  */
 public enum MediaType {
 
-    APPLICATION_JSON("application/json");
+    APPLICATION_JSON("application/json"),
+    APPLICATION_XML("application/xml"),
+    TEXT("text/plain");
 
     private final String value;
 
@@ -17,7 +19,7 @@ public enum MediaType {
         return value;
     }
 
-    public boolean equalCheck(String value){
+    public boolean equalCheck(String value) {
         return this.value.equals(value);
     }
 }

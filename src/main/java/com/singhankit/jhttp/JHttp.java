@@ -1,7 +1,6 @@
 package com.singhankit.jhttp;
 
 import com.singhankit.jhttp.internal.Server;
-import com.singhankit.jhttp.internal.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,7 @@ public class JHttp {
             return this;
         }
 
-        public JHttpBuilder requestMappings(List<RequestMapping> requestMappings) {
+        public JHttpBuilder addMappings(List<RequestMapping> requestMappings) {
             this.requestMappings.addAll(requestMappings);
             return this;
         }

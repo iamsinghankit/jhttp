@@ -1,7 +1,5 @@
 package com.singhankit.jhttp;
 
-import com.singhankit.jhttp.internal.Util;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,6 +60,10 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
         return this;
     }
 
+    public boolean remove(String key) {
+        return headers.remove(key) != null;
+    }
+
     public Optional<String> get(String key) {
         return Optional.ofNullable(headers.get(key));
     }
@@ -69,5 +71,10 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
     @Override
     public Iterator<Entry<String, String>> iterator() {
         return headers.entrySet().iterator();
+    }
+
+    @Override
+    public String toString() {
+        return headers.toString();
     }
 }

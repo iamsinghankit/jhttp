@@ -10,21 +10,37 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     void main() {
-        var helloMapping = RequestMapping.GET()
+        var getHelloMapping = RequestMapping.GET()
                                            .path("/hello")
-//                                           .mediaType(MediaType.APPLICATION_JSON)
-                                           .requestHandler(handleRequest())
+                                           .requestHandler(handleGetRequest())
                                            .build();
+        var postHelloMapping = RequestMapping.POST()
+                                            .path("/hello")
+                                            .requestHandler(handlePOSTRequest())
+                                            .build();
+        var putHelloMapping = RequestMapping.PUT()
+                                             .path("/hello")
+                                             .requestHandler(handlePOSTRequest())
+                                             .build();
         JHttp jHttp = JHttp.defaults()
-                           .addMapping(helloMapping)
+                           .addMapping(getHelloMapping)
+                           .addMapping(postHelloMapping)
+                           .addMapping(putHelloMapping)
                            .build();
         jHttp.start();
     }
 
-     HttpRequestHandler handleRequest(){
-        return (request)->{
-            LOG.info("Received: {}",request);
-            return new HttpResponse(request.headers().add("Content-Type","application/json"),HttpStatus.OK, null);
+    HttpRequestHandler handleGetRequest() {
+        return (request) -> {
+            LOG.info("GET Received: {}", request);
+            return new HttpResponse(request.headers(), HttpStatus.OK, null);
+        };
+    }
+
+    HttpRequestHandler handlePOSTRequest() {
+        return (request) -> {
+            LOG.info("POST Received: {}", request);
+            return new HttpResponse(request.headers(), HttpStatus.OK, null);
         };
     }
 }

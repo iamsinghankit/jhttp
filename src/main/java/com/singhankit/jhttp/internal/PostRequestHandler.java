@@ -8,6 +8,7 @@ import com.singhankit.jhttp.HttpResponse;
 import com.singhankit.jhttp.HttpStatus;
 import com.singhankit.jhttp.JHttp;
 import com.singhankit.jhttp.RequestMapping;
+import com.singhankit.jhttp.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,6 +6,7 @@ import com.singhankit.jhttp.HttpResponse;
 import com.singhankit.jhttp.HttpServerException;
 import com.singhankit.jhttp.HttpStatus;
 import com.singhankit.jhttp.MediaType;
+import com.singhankit.jhttp.Util;
 
 import java.util.Objects;
 
@@ -43,6 +44,10 @@ interface RequestHandler {
             headers.get(CONTENT_TYPE).orElseThrow(() -> new HttpServerException(HttpStatus.INTERNAL_SERVER_ERROR, "Content-Type is missing"));
             headers.add(CONTENT_LENGTH, String.valueOf(res.body().length()));
             return genResLine(res.status()) + addResHeaders(headers) + LINE_END + res.body();
+        }
+        else{
+            headers.remove(CONTENT_TYPE);
+            headers.remove(CONTENT_LENGTH);
         }
         return genResLine(res.status()) + addResHeaders(headers) + LINE_END;
     }

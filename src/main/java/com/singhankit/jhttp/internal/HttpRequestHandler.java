@@ -1,6 +1,7 @@
 package com.singhankit.jhttp.internal;
 
 import com.singhankit.jhttp.JHttp;
+import com.singhankit.jhttp.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,7 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             RequestHandler requestHandler = switch(request.method()) {
                 case GET -> new GetRequestHandler(request, jHttp);
                 case POST -> new PostRequestHandler(request, jHttp);
+                case PUT -> new PutRequestHandler(request, jHttp);
                 default -> throw new IllegalStateException("Unexpected value: " + request.method());
             };
 
