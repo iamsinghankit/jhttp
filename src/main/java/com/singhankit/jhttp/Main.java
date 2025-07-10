@@ -1,8 +1,9 @@
 package com.singhankit.jhttp;
 
+import com.singhankit.jhttp.interceptor.BasicAuthInterceptor;
 import com.singhankit.jhttp.interceptor.CorsInterceptor;
 import com.singhankit.jhttp.interceptor.CorsInterceptor.CorsHeader;
-import com.singhankit.jhttp.interceptor.BasicAuthInterceptor;
+import com.singhankit.jhttp.interceptor.RateLimitInterceptor;
 import com.singhankit.jhttp.interceptor.RequestInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +25,18 @@ public class Main {
 
         JHttp jHttp = JHttp.defaults()
                            .addMappings(mappings)
-                           .addRequestInterceptor(new BasicAuthInterceptor("ankit","pass"))
-                           .addRequestInterceptor(addHeaderInRequest())
+//                           .addRequestInterceptor(new IPBlackListInterceptor(Set.of("127.0.0.1")))
+                           .addRequestInterceptor(new BasicAuthInterceptor("ankit", "pass"))
+                           .addRequestInterceptor(new RateLimitInterceptor(2, 5000))
                            .addResponseInterceptor(new CorsInterceptor(CorsHeader.allowAll()))
                            .build();
         jHttp.start();
     }
 
 
-    private RequestInterceptor addHeaderInRequest(){
-        return request-> {
-            request.headers().add("RequestInterceptor","Testing");
+    private RequestInterceptor addHeaderInRequest() {
+        return request -> {
+            request.headers().add("RequestInterceptor", "Testing");
             return true;
         };
     }

@@ -1,5 +1,6 @@
 package com.singhankit.jhttp.internal;
 
+import com.singhankit.jhttp.HttpHeaders;
 import com.singhankit.jhttp.JHttp;
 import com.singhankit.jhttp.Util;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             }
             LOG.debug("Request: {}", requestLine);
             var request = Request.of(in, out, requestLine);
+            addRequestHeaders(request.headers());
             RequestHandler requestHandler = switch(request.method()) {
                 case GET -> new ResBodyAllowedHandler(request, jHttp);
                 case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(request, jHttp);
@@ -52,6 +54,13 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             LOG.error("Error occurred while handling request", e);
         } finally {
             Util.close(clientSocket);
+        }
+    }
+
+
+    private void addRequestHeaders(HttpHeaders httpHeaders) {
+        if(httpHeaders.get("X-Forwarded-For").isEmpty()) {
+            httpHeaders.add("X-Forwarded-For", clientSocket.getInetAddress().getHostAddress());
         }
     }
 }

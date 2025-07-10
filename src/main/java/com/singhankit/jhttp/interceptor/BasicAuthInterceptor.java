@@ -40,7 +40,7 @@ public class BasicAuthInterceptor implements RequestInterceptor {
 
     @Override
     public int order() {
-        return Integer.MIN_VALUE;
+        return Integer.MIN_VALUE + 2;
     }
 
     private String getToken(String authHeader) {

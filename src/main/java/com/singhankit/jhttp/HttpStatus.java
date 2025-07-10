@@ -16,6 +16,7 @@ public enum HttpStatus {
     NOT_ACCEPTABLE(406, "Not Acceptable"),
     PROXY_AUTHENTICATION_REQUIRED(407, "Proxy Authentication Required"),
     REQUEST_TIMEOUT(408, "Request Timeout"),
+    TO_MANY_REQUESTS(429, "Too Many Requests"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
     NOT_IMPLEMENTED(501, "Not Implemented"),
     BAD_GATEWAY(502, "Bad Gateway"),
