@@ -17,7 +17,7 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     void main() {
-        var getHelloMapping = RequestMapping.GET().path("/hello").handler(handleGetRequest()).build();
+        var getHelloMapping = RequestMapping.GET().path("/hello").handler(req->new HttpResponse(req.headers(),HttpStatus.OK,null)).build();
         var postHelloMapping = RequestMapping.POST().path("/hello").handler(handlePOSTRequest()).build();
         var putHelloMapping = RequestMapping.OPTIONS().path("/hello").handler(handlePOSTRequest()).build();
 
@@ -25,6 +25,7 @@ public class Main {
 
         JHttp jHttp = JHttp.defaults()
                            .addMappings(mappings)
+
 //                           .addRequestInterceptor(new IPBlackListInterceptor(Set.of("127.0.0.1")))
                            .addRequestInterceptor(new BasicAuthInterceptor("ankit", "pass"))
                            .addRequestInterceptor(new RateLimitInterceptor(2, 5000))
