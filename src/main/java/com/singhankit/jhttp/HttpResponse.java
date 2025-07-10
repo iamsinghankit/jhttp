@@ -13,8 +13,8 @@ public record HttpResponse(HttpHeaders headers, HttpStatus status, String body) 
         }
     }
 
-    public static HttpResponse of(HttpStatus status) {
-        return new HttpResponse(null, status, null);
+    public HttpResponse withStatus(HttpStatus status) {
+        return new HttpResponse(headers, status, body);
     }
 
 

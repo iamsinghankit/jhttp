@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Ankit Singh
  */
-class ReqResBodyAllowedHandler extends ReqBodyHandler {
+class ReqResBodyAllowedHandler extends BaseReqBodyHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ReqResBodyAllowedHandler.class);
 
     ReqResBodyAllowedHandler(Request req, JHttp jHttp) {
@@ -30,7 +30,7 @@ class ReqResBodyAllowedHandler extends ReqBodyHandler {
             req.out().write(response.toString());
             req.out().flush();
         } catch(Exception e) {
-            LOG.error("Error occurred while handling POST request", e);
+            LOG.error("Error occurred while handling request", e);
         }
     }
 }

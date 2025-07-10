@@ -44,6 +44,9 @@ public class RequestMapping {
     public static PUTBuilder PUT() {
         return new PUTBuilder();
     }
+    public static OPTIONSBuilder OPTIONS() {
+        return new OPTIONSBuilder();
+    }
 
     public static class GETBuilder extends RequestMappingBuilder {
         @Override
@@ -60,6 +63,31 @@ public class RequestMapping {
             Util.requireNonNull(path, "path is required");
             Util.requireNonNull(requestHandler,"request handler is required");
             return new RequestMapping(path, HttpMethod.GET, requestHandler, null);
+        }
+    }
+
+    public static class OPTIONSBuilder extends POSTBuilder{
+
+        @Override
+        public OPTIONSBuilder mediaType(MediaType mediaType) {
+            return (OPTIONSBuilder)super.mediaType(mediaType);
+        }
+
+        @Override
+        public OPTIONSBuilder path(String path) {
+            return (OPTIONSBuilder)super.path(path);
+        }
+
+        @Override
+        public OPTIONSBuilder requestHandler(HttpRequestHandler requestHandler) {
+            return (OPTIONSBuilder)super.requestHandler(requestHandler);
+        }
+
+        @Override
+        public RequestMapping build() {
+            Util.requireNonNull(path, "path is required");
+            Util.requireNonNull(requestHandler,"request handler is required");
+            return new RequestMapping(path, HttpMethod.OPTIONS, requestHandler, mediaType);
         }
     }
 

@@ -24,6 +24,12 @@ public class Util {
         }
     }
 
+    public static void requireNull(Object obj, String message) {
+        if(Objects.nonNull(obj)){
+            throw new HttpServerException(HttpStatus.INTERNAL_SERVER_ERROR, message);
+        }
+    }
+
     public static void close(Closeable closeable){
         try{
             closeable.close();

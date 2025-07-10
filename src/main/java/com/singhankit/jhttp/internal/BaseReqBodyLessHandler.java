@@ -14,20 +14,21 @@ import java.util.Map;
 /**
  * @author Ankit Singh
  */
-abstract class ReqBodyLessHandler implements RequestHandler {
+abstract class BaseReqBodyLessHandler implements RequestHandler {
     final Request req;
     final JHttp jHttp;
 
-    ReqBodyLessHandler(Request req, JHttp jHttp) {
+    BaseReqBodyLessHandler(Request req, JHttp jHttp) {
         this.req = req;
         this.jHttp = jHttp;
     }
 
     HttpResponse doHandle() {
         var handlerAndRequest = getHandlerAndRequest();
+        var request = handlerAndRequest.request;
         executeRequestInterceptors(handlerAndRequest.request());
-        HttpResponse httpResponse = handlerAndRequest.handler().handle(handlerAndRequest.request());
-        executeResponseInterceptors(httpResponse);
+        HttpResponse httpResponse = handlerAndRequest.handler().handle(request);
+        executeResponseInterceptors(request,httpResponse);
         return httpResponse;
     }
 
@@ -40,9 +41,9 @@ abstract class ReqBodyLessHandler implements RequestHandler {
         }
     }
 
-    private void executeResponseInterceptors(HttpResponse response) {
+    private void executeResponseInterceptors(HttpRequest request,HttpResponse response) {
         for(var responseInterceptor : jHttp.getResponseInterceptors()) {
-            if(responseInterceptor.intercept(response)) {
+            if(responseInterceptor.intercept(request,response)) {
                 continue;
             }
             break;

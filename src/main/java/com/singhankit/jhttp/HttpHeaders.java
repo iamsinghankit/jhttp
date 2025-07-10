@@ -16,6 +16,7 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
 
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String AUTHORIZATION = "Authorization";
     private final Map<String, String> headers;
 
     public HttpHeaders(Map<String, String> headers) {

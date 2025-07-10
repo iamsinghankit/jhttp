@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * @author Ankit Singh
  */
- class ResBodyNotAllowedHandler extends ReqBodyLessHandler {
+ class ResBodyNotAllowedHandler extends BaseReqBodyLessHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ResBodyNotAllowedHandler.class);
 
 
@@ -25,7 +25,7 @@ import java.io.IOException;
         var response = new StringBuilder();
         try {
             HttpResponse httpResponse = doHandle();
-            Util.requireNonNull(httpResponse.body(),"Response cannot include body");
+            Util.requireNull(httpResponse.body(),"Response cannot include body");
             response.append(generateRes(httpResponse));
         } catch(HttpException ex) {
             response.append(generateErrorRes(req.headers(), ex));
@@ -34,7 +34,7 @@ import java.io.IOException;
             req.out().write(response.toString());
             req.out().flush();
         } catch(IOException ex) {
-            LOG.error("Error occurred while handling GET requests", ex);
+            LOG.error("Error occurred while handling request", ex);
         }
     }
 }

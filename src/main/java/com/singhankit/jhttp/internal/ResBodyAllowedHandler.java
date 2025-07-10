@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author Ankit Singh
  */
-class ResBodyAllowedHandler extends ReqBodyLessHandler {
+class ResBodyAllowedHandler extends BaseReqBodyLessHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ResBodyAllowedHandler.class);
 
     ResBodyAllowedHandler(Request req, JHttp jHttp) {
@@ -31,7 +31,7 @@ class ResBodyAllowedHandler extends ReqBodyLessHandler {
             req.out().write(response.toString());
             req.out().flush();
         } catch(IOException ex) {
-            LOG.error("Error occurred while handling GET requests", ex);
+            LOG.error("Error occurred while handling request", ex);
         }
     }
 

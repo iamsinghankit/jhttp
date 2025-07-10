@@ -1,5 +1,7 @@
 package com.singhankit.jhttp;
 
+import com.singhankit.jhttp.interceptor.RequestInterceptor;
+import com.singhankit.jhttp.interceptor.ResponseInterceptor;
 import com.singhankit.jhttp.internal.Server;
 
 import java.util.ArrayList;
@@ -144,7 +146,7 @@ public class JHttp {
             requireNonNull(port);
             requireNonNull(serverThreadPool);
             Util.requireNonEmpty(requestMappings, "request mappings cannot be empty");
-            return new JHttp(port, requestMappings,requestInterceptors,responseInterceptors, serverThreadPool);
+            return new JHttp(port, requestMappings, requestInterceptors,responseInterceptors, serverThreadPool);
         }
 
     }
