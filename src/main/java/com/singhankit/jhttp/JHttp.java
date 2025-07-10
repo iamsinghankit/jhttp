@@ -82,12 +82,12 @@ public class JHttp {
         return responseInterceptors;
     }
 
-    void start() {
+    public void start() {
         httpServer = Server.createHttpServer(this);
         httpServer.start();
     }
 
-    void shutdown() {
+    public void shutdown() {
         httpServer.stop();
     }
 

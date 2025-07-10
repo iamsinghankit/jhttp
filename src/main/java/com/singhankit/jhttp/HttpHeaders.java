@@ -74,8 +74,9 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
         return headers.entrySet().iterator();
     }
 
+
     @Override
     public String toString() {
-        return headers.toString();
+        return Util.toJson(headers);
     }
 }

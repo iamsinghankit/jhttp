@@ -1,7 +1,7 @@
 
 # JHTTP - Java HTTP Server 🚀
 
-A lightweight, extensible, high-performance HTTP server built from scratch using Java `VirtualThread` . Designed to demonstrate core HTTP concepts, support advance routing, interceptors (auth, CORS, IP blacklist).
+A lightweight, extensible, high-performance HTTP server built from scratch using Java `VirtualThread` . Designed to demonstrate core HTTP concepts, support advance routing, interceptors (auth, CORS, IP blocklist, JSON logging).
 
 ---
 
@@ -12,7 +12,7 @@ A lightweight, extensible, high-performance HTTP server built from scratch using
 | ✅ HTTP                      | Supports plain connections                               |
 | ✅ GET, POST, PUT, DELETE    | Handles all common HTTP methods                          |
 | ✅ Routing with Parameters   | Simple path-based routing with query/path param parsing  |
-| ✅ Interceptors (Middleware) | CORS, Auth, IP Whitelist, Rate Limiting                  |
+| ✅ Interceptors (Middleware) | CORS, Auth, IP Whitelist, Rate Limiting, Json logging    |
 | ✅ Basic Auth                | Basic support for `Authorization: Basic` token header    |
 | ✅ CORS Support              | Adds proper headers and handles `OPTIONS` preflight      |
 | ✅ Body Parsers              | Handles JSON, form-data, file uploads, and octet streams |
@@ -45,7 +45,6 @@ JHttp jHttp = JHttp.defaults()
 ```bash
 curl http://localhost:9090/hello
 ```
-
 ---
 
 ## 🔐 Basic Authentication
@@ -84,12 +83,13 @@ Handles:
 
 ## 🧪 Supported Interceptors
 
-| Interceptor             | Purpose                       |
-|-------------------------|-------------------------------|
-| `CorsInterceptor`       | Adds CORS headers             |
-| `BasicAuthInterceptor`  | Verifies basic token          |
-| `IPBlackListInterceptor` | Block specified IPs           |
-| `RateLimitInterceptor`  | Basic per-IP request limiting |
+| Interceptor              | Purpose                        |
+|--------------------------|--------------------------------|
+| `CorsInterceptor`        | Adds CORS headers              |
+| `BasicAuthInterceptor`   | Verifies basic token           |
+| `IPBlockListInterceptor` | Block specified IPs            |
+| `RateLimitInterceptor`   | Basic per-IP request limiting  |
+| `JsonLoggingInterceptor` | Request, Response json logging | 
 
 
 ## 📜 License

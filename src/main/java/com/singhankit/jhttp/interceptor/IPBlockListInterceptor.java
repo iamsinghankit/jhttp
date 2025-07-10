@@ -10,12 +10,12 @@ import java.util.Set;
 /**
  * @author Ankit Singh
  */
-public class IPBlackListInterceptor implements RequestInterceptor {
+public class IPBlockListInterceptor implements RequestInterceptor {
 
-    private final Set<String> ipsNotAllowed;
+    private final Set<String> blockedIps;
 
-    public IPBlackListInterceptor(Set<String> ipsNotAllowed) {
-        this.ipsNotAllowed = ipsNotAllowed;
+    public IPBlockListInterceptor(Set<String> blockedIps) {
+        this.blockedIps = blockedIps;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class IPBlackListInterceptor implements RequestInterceptor {
         String ip = request.headers().get("X-Forwarded-For")
                            .orElseThrow(() -> new HttpClientException(HttpStatus.BAD_REQUEST, "'X-Forwarded-For' header missing"));
 
-        if(ipsNotAllowed.contains(ip)) {
+        if(blockedIps.contains(ip)) {
             throw new HttpClientException(HttpStatus.FORBIDDEN, "Host not allowed");
         }
         return true;

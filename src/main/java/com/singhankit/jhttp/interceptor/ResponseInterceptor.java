@@ -11,5 +11,7 @@ public interface ResponseInterceptor {
 
     boolean intercept(HttpRequest request, HttpResponse response) throws HttpException;
 
-    int order();
+    default int order(){
+        return 0;
+    }
 }

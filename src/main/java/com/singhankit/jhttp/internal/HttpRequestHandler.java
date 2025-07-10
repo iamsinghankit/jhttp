@@ -40,7 +40,6 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             if(Util.isEmpty(requestLine)) {
                 return;
             }
-            LOG.debug("Request: {}", requestLine);
             var request = Request.of(in, out, requestLine);
             addRequestHeaders(request.headers());
             RequestHandler requestHandler = switch(request.method()) {
