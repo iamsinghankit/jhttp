@@ -1,22 +1,22 @@
 
 # JHTTP - Java HTTP Server 🚀
 
-A lightweight, extensible, HTTP server built from scratch using Java `Socket` . Designed to demonstrate core HTTP concepts, support advance routing, filters (auth, CORS, IP blacklist).
+A lightweight, extensible, high-performance HTTP server built from scratch using Java `VirtualThread` . Designed to demonstrate core HTTP concepts, support advance routing, interceptors (auth, CORS, IP blacklist).
 
 ---
 
 ## 🔧 Features
 
-| Feature                   | Description                                                   |
-|---------------------------|---------------------------------------------------------------|
-| ✅ HTTP                    | Supports plain connections                                   |
-| ✅ GET, POST, PUT, DELETE  | Handles all common HTTP methods                              |
-| ✅ Routing with Parameters | Simple path-based routing with query/path param parsing      |
-| ✅ Filters (Middleware)    | CORS, Auth, IP Whitelist, Rate Limiting                      |
-| ✅ Basic Auth              | Basic support for `Authorization: Basic` token header        |
-| ✅ CORS Support            | Adds proper headers and handles `OPTIONS` preflight          |
-| ✅ Body Parsers            | Handles JSON, form-data, file uploads, and octet streams     |
-| ✅ Modular Architecture    | Easily plug in routes, filters, and response logic           |
+| Feature                     | Description                                              |
+|-----------------------------|----------------------------------------------------------|
+| ✅ HTTP                      | Supports plain connections                               |
+| ✅ GET, POST, PUT, DELETE    | Handles all common HTTP methods                          |
+| ✅ Routing with Parameters   | Simple path-based routing with query/path param parsing  |
+| ✅ Interceptors (Middleware) | CORS, Auth, IP Whitelist, Rate Limiting                  |
+| ✅ Basic Auth                | Basic support for `Authorization: Basic` token header    |
+| ✅ CORS Support              | Adds proper headers and handles `OPTIONS` preflight      |
+| ✅ Body Parsers              | Handles JSON, form-data, file uploads, and octet streams |
+| ✅ Modular Architecture      | Easily plug in routes, interceptors, and response logic  |
 
 ---
 
@@ -84,16 +84,23 @@ Handles:
 
 ## 🧪 Supported Interceptors
 
-| Filter                   | Purpose                     |
-|--------------------------|-----------------------------|
-| `CorsInterceptor`        | Adds CORS headers + preflight |
-| `BasicAuthInterceptor`   | Verifies bearer token       |
-| `IPBlackListInterceptor` | Block specified IPs     |
-| `RateLimitInterceptor`   | Basic per-IP request limiting |
+| Interceptor             | Purpose                       |
+|-------------------------|-------------------------------|
+| `CorsInterceptor`       | Adds CORS headers             |
+| `BasicAuthInterceptor`  | Verifies basic token          |
+| `IPBlackListInterceptor` | Block specified IPs           |
+| `RateLimitInterceptor`  | Basic per-IP request limiting |
 
 
 ## 📜 License
 
-Apache 2. Contributions welcome!
+This project is licensed under the [Apache License 2.0](LICENSE).  
+Feel free to use, modify, and distribute it with attribution.
+
+
+## 👤 Author
+
+Ankit Singh  
+🔗 [GitHub](https://github.com/iamsinghankit) • 📨 [Email](mailto:iamsinghankit@gmail.com)
 
 
