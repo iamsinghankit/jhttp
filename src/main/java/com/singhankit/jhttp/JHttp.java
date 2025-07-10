@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
+import static java.util.Comparator.comparingInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,15 +30,18 @@ public class JHttp {
         this.port = port;
         this.requestMappings = requestMappings;
         this.serverThreadPool = serverThreadPool;
-        this.requestInterceptors = requestInterceptors;
-        this.responseInterceptors = responseInterceptors;
+        this.requestInterceptors = requestInterceptors.stream().sorted(comparingInt(RequestInterceptor::order)).toList();
+        this.responseInterceptors = responseInterceptors.stream().sorted(comparingInt(ResponseInterceptor::order)).toList();
     }
 
     public static JHttpBuilder defaults() {
         int defaultPort = 9090;
         String defaultThreadName = "jhttp-thread-";
-        var builder = new JHttpBuilder();
-        return builder.port(defaultPort).serverThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual().name(defaultThreadName, 1).factory()));
+        return new JHttpBuilder()
+                .port(defaultPort)
+                .serverThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual()
+                                                                           .name(defaultThreadName, 1)
+                                                                           .factory()));
     }
 
     public static JHttpBuilder of() {

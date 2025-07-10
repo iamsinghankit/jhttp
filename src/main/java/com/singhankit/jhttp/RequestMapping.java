@@ -55,8 +55,8 @@ public class RequestMapping {
         }
 
         @Override
-        public GETBuilder requestHandler(HttpRequestHandler requestHandler) {
-            return (GETBuilder) super.requestHandler(requestHandler);
+        public GETBuilder handler(HttpRequestHandler requestHandler) {
+            return (GETBuilder) super.handler(requestHandler);
         }
 
         public RequestMapping build() {
@@ -79,8 +79,8 @@ public class RequestMapping {
         }
 
         @Override
-        public OPTIONSBuilder requestHandler(HttpRequestHandler requestHandler) {
-            return (OPTIONSBuilder)super.requestHandler(requestHandler);
+        public OPTIONSBuilder handler(HttpRequestHandler requestHandler) {
+            return (OPTIONSBuilder)super.handler(requestHandler);
         }
 
         @Override
@@ -104,8 +104,8 @@ public class RequestMapping {
         }
 
         @Override
-        public PUTBuilder requestHandler(HttpRequestHandler requestHandler) {
-            return (PUTBuilder)super.requestHandler(requestHandler);
+        public PUTBuilder handler(HttpRequestHandler requestHandler) {
+            return (PUTBuilder)super.handler(requestHandler);
         }
 
         @Override
@@ -131,8 +131,8 @@ public class RequestMapping {
         }
 
         @Override
-        public POSTBuilder requestHandler(HttpRequestHandler requestHandler) {
-            return (POSTBuilder) super.requestHandler(requestHandler);
+        public POSTBuilder handler(HttpRequestHandler requestHandler) {
+            return (POSTBuilder) super.handler(requestHandler);
         }
 
         public RequestMapping build() {
@@ -157,7 +157,7 @@ public class RequestMapping {
             return this;
         }
 
-        public RequestMappingBuilder requestHandler(HttpRequestHandler requestHandler) {
+        public RequestMappingBuilder handler(HttpRequestHandler requestHandler) {
             this.requestHandler = requestHandler;
             return this;
         }

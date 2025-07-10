@@ -16,16 +16,16 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     void main() {
-        var getHelloMapping = RequestMapping.GET().path("/hello").requestHandler(handleGetRequest()).build();
-        var postHelloMapping = RequestMapping.POST().path("/hello").requestHandler(handlePOSTRequest()).build();
-        var putHelloMapping = RequestMapping.OPTIONS().path("/hello").requestHandler(handlePOSTRequest()).build();
+        var getHelloMapping = RequestMapping.GET().path("/hello").handler(handleGetRequest()).build();
+        var postHelloMapping = RequestMapping.POST().path("/hello").handler(handlePOSTRequest()).build();
+        var putHelloMapping = RequestMapping.OPTIONS().path("/hello").handler(handlePOSTRequest()).build();
 
         var mappings = List.of(getHelloMapping, postHelloMapping, putHelloMapping);
 
         JHttp jHttp = JHttp.defaults()
                            .addMappings(mappings)
-                           .addRequestInterceptor(addHeaderInRequest())
                            .addRequestInterceptor(new BasicAuthInterceptor("ankit","pass"))
+                           .addRequestInterceptor(addHeaderInRequest())
                            .addResponseInterceptor(new CorsInterceptor(CorsHeader.allowAll()))
                            .build();
         jHttp.start();

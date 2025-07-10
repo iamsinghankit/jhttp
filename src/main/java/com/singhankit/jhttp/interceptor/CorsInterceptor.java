@@ -29,6 +29,11 @@ public class CorsInterceptor implements ResponseInterceptor {
         return true;
     }
 
+    @Override
+    public int order() {
+        return Integer.MAX_VALUE;
+    }
+
     public record CorsHeader(String allowOrigins, String allowMethods, String allowHeaders, String maxAge) {
 
         public static CorsHeader allowAll() {

@@ -38,6 +38,11 @@ public class BasicAuthInterceptor implements RequestInterceptor {
         }
     }
 
+    @Override
+    public int order() {
+        return Integer.MIN_VALUE;
+    }
+
     private String getToken(String authHeader) {
         String base64Credentials = authHeader.substring("Basic ".length());
         byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);

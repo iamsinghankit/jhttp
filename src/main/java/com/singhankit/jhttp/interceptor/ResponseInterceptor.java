@@ -10,4 +10,6 @@ import com.singhankit.jhttp.HttpResponse;
 public interface ResponseInterceptor {
 
     boolean intercept(HttpRequest request, HttpResponse response) throws HttpException;
+
+    int order();
 }

@@ -5,13 +5,13 @@ import com.singhankit.jhttp.JHttp;
 /**
  * @author Ankit Singh
  */
- public interface Server {
+public interface Server {
 
-
-     static Server createHttpServer(JHttp jHttp){
-         return new JHttpServer(jHttp);
+    static Server createHttpServer(JHttp jHttp) {
+        return new JHttpServer(jHttp);
     }
-     void start();
 
-     void stop();
+    void start();
+
+    void stop();
 }
