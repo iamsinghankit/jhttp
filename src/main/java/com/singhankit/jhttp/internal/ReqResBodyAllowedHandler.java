@@ -13,7 +13,6 @@ class ReqResBodyAllowedHandler extends BaseReqBodyHandler {
         super(req, jHttp);
     }
 
-
     @Override
     public void handle() {
         var response = new StringBuilder();
