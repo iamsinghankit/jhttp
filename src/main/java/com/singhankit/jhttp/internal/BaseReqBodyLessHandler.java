@@ -17,10 +17,12 @@ import java.util.Map;
 abstract class BaseReqBodyLessHandler implements RequestHandler {
     final Request req;
     final JHttp jHttp;
+    private final TCPHandler tcpHandler;
 
     BaseReqBodyLessHandler(Request req, JHttp jHttp) {
         this.req = req;
         this.jHttp = jHttp;
+        this.tcpHandler = new TCPHandler(req);
     }
 
     HttpResponse doHandle() {
@@ -32,7 +34,7 @@ abstract class BaseReqBodyLessHandler implements RequestHandler {
         return httpResponse;
     }
 
-    private void executeRequestInterceptors(HttpRequest request) {
+    void executeRequestInterceptors(HttpRequest request) {
         for(var requestInterceptor : jHttp.getRequestInterceptors()) {
             if(requestInterceptor.intercept(request)) {
                 continue;
@@ -41,13 +43,17 @@ abstract class BaseReqBodyLessHandler implements RequestHandler {
         }
     }
 
-    private void executeResponseInterceptors(HttpRequest request,HttpResponse response) {
+    void executeResponseInterceptors(HttpRequest request,HttpResponse response) {
         for(var responseInterceptor : jHttp.getResponseInterceptors()) {
             if(responseInterceptor.intercept(request,response)) {
                 continue;
             }
             break;
         }
+    }
+
+    void send(String response){
+        tcpHandler.writeSocket(response);
     }
 
     private HandlerAndRequest getHandlerAndRequest() {

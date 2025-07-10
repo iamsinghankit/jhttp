@@ -26,6 +26,7 @@ public class CorsInterceptor implements ResponseInterceptor {
         headers.add("Access-Control-Allow-Methods", corsHeader.allowMethods);
         headers.add("Access-Control-Allow-Headers", corsHeader.allowHeaders);
         headers.add("Access-Control-Max-Age", corsHeader.maxAge);
+        headers.add("Access-Control-Allow-Credentials",String.valueOf(corsHeader.credentials));
         return true;
     }
 
@@ -34,10 +35,10 @@ public class CorsInterceptor implements ResponseInterceptor {
         return Integer.MAX_VALUE;
     }
 
-    public record CorsHeader(String allowOrigins, String allowMethods, String allowHeaders, String maxAge) {
+    public record CorsHeader(String allowOrigins, String allowMethods, String allowHeaders, boolean credentials,String maxAge) {
 
         public static CorsHeader allowAll() {
-            return new CorsHeader("*", "GET,POST,PUT,DELETE,PATCH,OPTIONS,TRACE", "*", "3600");
+            return new CorsHeader("*", "GET,POST,PUT,DELETE,PATCH,OPTIONS,TRACE", "*", true ,"3600");
         }
     }
 }

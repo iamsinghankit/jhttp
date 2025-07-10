@@ -45,7 +45,8 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             RequestHandler requestHandler = switch(request.method()) {
                 case GET -> new ResBodyAllowedHandler(request, jHttp);
                 case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(request, jHttp);
-                case TRACE, OPTIONS, HEAD -> new ResBodyNotAllowedHandler(request, jHttp);
+                case TRACE, HEAD -> new ResBodyNotAllowedHandler(request, jHttp);
+                case OPTIONS -> new OptionsRequestHandler(request, jHttp);
                 case UNKNOWN -> () -> {};
             };
             requestHandler.handle();

@@ -4,17 +4,11 @@ import com.singhankit.jhttp.HttpException;
 import com.singhankit.jhttp.HttpResponse;
 import com.singhankit.jhttp.JHttp;
 import com.singhankit.jhttp.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * @author Ankit Singh
  */
  class ResBodyNotAllowedHandler extends BaseReqBodyLessHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(ResBodyNotAllowedHandler.class);
-
 
     ResBodyNotAllowedHandler(Request req, JHttp jHttp) {
         super(req, jHttp);
@@ -30,11 +24,6 @@ import java.io.IOException;
         } catch(HttpException ex) {
             response.append(generateErrorRes(req.headers(), ex));
         }
-        try {
-            req.out().write(response.toString());
-            req.out().flush();
-        } catch(IOException ex) {
-            LOG.error("Error occurred while handling request", ex);
-        }
+        send(response.toString());
     }
 }

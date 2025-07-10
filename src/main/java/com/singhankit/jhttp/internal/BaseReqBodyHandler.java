@@ -18,10 +18,12 @@ import java.util.Map;
 abstract class BaseReqBodyHandler implements RequestHandler {
     final Request req;
     final JHttp jHttp;
+    private final TCPHandler tcpHandler;
 
     BaseReqBodyHandler(Request req, JHttp jHttp) {
         this.req = req;
         this.jHttp = jHttp;
+        this.tcpHandler = new TCPHandler(req);
     }
 
     HttpResponse doHandle() {
@@ -41,6 +43,10 @@ abstract class BaseReqBodyHandler implements RequestHandler {
             }
             break;
         }
+    }
+
+    void send(String response){
+        tcpHandler.writeSocket(response);
     }
 
     private void executeResponseInterceptors(HttpRequest request,HttpResponse response) {

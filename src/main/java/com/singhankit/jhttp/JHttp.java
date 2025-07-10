@@ -1,5 +1,8 @@
 package com.singhankit.jhttp;
 
+import com.singhankit.jhttp.interceptor.CorsInterceptor;
+import com.singhankit.jhttp.interceptor.CorsInterceptor.CorsHeader;
+import com.singhankit.jhttp.interceptor.JsonLoggingInterceptor;
 import com.singhankit.jhttp.interceptor.RequestInterceptor;
 import com.singhankit.jhttp.interceptor.ResponseInterceptor;
 import com.singhankit.jhttp.internal.Server;
@@ -43,6 +46,7 @@ public class JHttp {
                                                                            .name(defaultThreadName, 1)
                                                                            .factory()));
     }
+
 
     public static JHttpBuilder of() {
         return new JHttpBuilder();
@@ -105,12 +109,26 @@ public class JHttp {
             this.responseInterceptors = new ArrayList<>();
         }
 
-
         public JHttpBuilder port(int port) {
             this.port = port;
             return this;
         }
 
+        public JHttpBuilder enableLogging(boolean enable) {
+            if(enable){
+                var interceptor = new JsonLoggingInterceptor();
+                addRequestInterceptor(interceptor);
+                addResponseInterceptor(interceptor);
+            }
+            return this;
+        }
+
+        public JHttpBuilder enableCors(boolean enable) {
+            if(enable){
+                addResponseInterceptor(new CorsInterceptor(CorsHeader.allowAll()));
+            }
+            return this;
+        }
 
         public JHttpBuilder addMapping(RequestMapping requestMapping) {
             requestMappings.add(requestMapping);
