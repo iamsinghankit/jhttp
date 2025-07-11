@@ -28,14 +28,14 @@ class OptionsRequestHandler extends BaseReqBodyLessHandler {
                 executeRequestInterceptors(httpRequest);
                 var httpResponse = new HttpResponse(req.headers(), HttpStatus.NO_CONTENT, null);
                 executeResponseInterceptors(httpRequest, httpResponse);
-                response.append(generateRes(httpResponse));
+                response.append(generateHttpResponse(httpResponse));
             } else {
                 HttpResponse httpResponse = doHandle();
                 Util.requireNull(httpResponse.body(), "Response cannot include body");
-                response.append(generateRes(httpResponse));
+                response.append(generateHttpResponse(httpResponse));
             }
         } catch(HttpException ex) {
-            response.append(generateErrorRes(req.headers(), ex));
+            response.append(generateHttpResponse(req.headers(), ex));
         }
         send(response.toString());
     }

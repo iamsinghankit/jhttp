@@ -58,6 +58,11 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
         return headers.entrySet().iterator();
     }
 
+    public String toHttpString(){
+        var res = new StringBuilder();
+        headers.forEach((k,v) -> res.append(k).append(":").append(v).append("\r\n"));
+        return res.toString();
+    }
 
     @Override
     public String toString() {

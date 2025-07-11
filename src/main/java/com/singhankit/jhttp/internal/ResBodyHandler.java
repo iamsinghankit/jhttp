@@ -25,9 +25,9 @@ class ResBodyHandler extends BaseReqBodyLessHandler {
             if(!resBodyAllowed) {
                 Util.requireNull(httpResponse.body(), "Response cannot include body");
             }
-            response.append(generateRes(httpResponse));
+            response.append(generateHttpResponse(httpResponse));
         } catch(HttpException ex) {
-            response.append(generateErrorRes(req.headers(), ex));
+            response.append(generateHttpResponse(req.headers(), ex));
         }
         send(response.toString());
     }

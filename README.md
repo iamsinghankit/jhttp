@@ -20,14 +20,11 @@ A lightweight, extensible, high-performance HTTP server built from scratch using
 
 ---
 
----
-
 ## 🚀 Getting Started
 
 ### 🏗️ Build from Scratch
 
-### 🔹  Clone the Repository
-
+Clone the repository and run maven command:
 ```bash
 git clone https://github.com/iamsinghankit/jhttp.git
 cd jhttp
@@ -57,7 +54,7 @@ To add a dependency on JHttp using Maven, use the following:
 ```java
 var getHelloMapping = RequestMapping.GET()
                                      .path("/hello")
-                                     .handler(req -> new HttpResponse(req.headers(),HttpStatus.OK, null))
+                                     .handler(req -> new HttpResponse(null, HttpStatus.OK, null))
                                      .build();
 
 JHttp jHttp = JHttp.defaults()
@@ -102,13 +99,21 @@ Enable with:
 ```java
 .addResponseInterceptor(new CorsInterceptor(CorsHeader.allowAll()))
 ```
+or
+```java
+.enableCors(true)
+```
 
 Handles:
 
 * `OPTIONS`
 * `Access-Control-Allow-*` headers
-
-
+---
+## 🔄 Logging Support
+```java
+.enableLogging(true)
+```
+---
 ## 🧪 Supported Interceptors
 
 | Interceptor              | Purpose                        |
