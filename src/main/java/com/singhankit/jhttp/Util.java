@@ -13,16 +13,12 @@ import java.util.stream.Collectors;
 /// @author Ankit Singh
 public class Util {
 
-    /**
-     * is Empty method
-     *
-     * @param value
-     * @return
-     */
+    ///  Returns true if it is null/empty otherwise false
     public static boolean isEmpty(String value) {
         return value == null || value.isEmpty();
     }
 
+    /// Returns true if it not null/empty otherwise false
     public static boolean isNotEmpty(String value) {
         return !isEmpty(value);
     }

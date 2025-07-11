@@ -38,8 +38,15 @@ mvn clean install
 
 To add a dependency on JHttp using Maven, use the following:
 ```xml
+<repositories>
+    <repository>
+        <id>github</id>
+        <url>https://maven.pkg.github.com/iamsinghankit/jhttp</url>
+    </repository>
+</repositories>
+
 <dependency>
-    <groupId>com.singhankit</groupId>
+    <groupId>com.iamsinghankit</groupId>
     <artifactId>jhttp</artifactId>
     <version>0.0.1</version>
 </dependency>
