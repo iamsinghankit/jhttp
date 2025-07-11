@@ -12,8 +12,8 @@ class ResBodyHandler extends BaseReqBodyLessHandler {
 
     private final boolean resBodyAllowed;
 
-    ResBodyHandler(Request req, JHttp jHttp, boolean resBodyAllowed) {
-        super(req, jHttp);
+    ResBodyHandler(TCPHandler tcpHandler, Request req, JHttp jHttp, boolean resBodyAllowed) {
+        super(tcpHandler, req, jHttp);
         this.resBodyAllowed = resBodyAllowed;
     }
 
@@ -28,6 +28,7 @@ class ResBodyHandler extends BaseReqBodyLessHandler {
             response.append(generateRes(httpResponse));
         } catch(HttpException ex) {
             response.append(generateErrorRes(req.headers(), ex));
-        } send(response.toString());
+        }
+        send(response.toString());
     }
 }

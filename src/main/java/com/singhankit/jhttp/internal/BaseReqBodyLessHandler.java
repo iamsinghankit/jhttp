@@ -19,10 +19,10 @@ abstract class BaseReqBodyLessHandler implements RequestHandler {
     final JHttp jHttp;
     private final TCPHandler tcpHandler;
 
-    BaseReqBodyLessHandler(Request req, JHttp jHttp) {
+    BaseReqBodyLessHandler(TCPHandler tcpHandler, Request req, JHttp jHttp) {
         this.req = req;
         this.jHttp = jHttp;
-        this.tcpHandler = new TCPHandler(req);
+        this.tcpHandler = tcpHandler;
     }
 
     HttpResponse doHandle() {
@@ -30,7 +30,7 @@ abstract class BaseReqBodyLessHandler implements RequestHandler {
         var request = handlerAndRequest.request;
         executeRequestInterceptors(handlerAndRequest.request());
         HttpResponse httpResponse = handlerAndRequest.handler().handle(request);
-        executeResponseInterceptors(request,httpResponse);
+        executeResponseInterceptors(request, httpResponse);
         return httpResponse;
     }
 
@@ -43,16 +43,16 @@ abstract class BaseReqBodyLessHandler implements RequestHandler {
         }
     }
 
-    void executeResponseInterceptors(HttpRequest request,HttpResponse response) {
+    void executeResponseInterceptors(HttpRequest request, HttpResponse response) {
         for(var responseInterceptor : jHttp.getResponseInterceptors()) {
-            if(responseInterceptor.intercept(request,response)) {
+            if(responseInterceptor.intercept(request, response)) {
                 continue;
             }
             break;
         }
     }
 
-    void send(String response){
+    void send(String response) {
         tcpHandler.writeSocket(response);
     }
 

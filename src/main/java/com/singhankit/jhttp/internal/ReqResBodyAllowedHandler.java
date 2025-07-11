@@ -9,8 +9,8 @@ import com.singhankit.jhttp.JHttp;
  */
 class ReqResBodyAllowedHandler extends BaseReqBodyHandler {
 
-    ReqResBodyAllowedHandler(Request req, JHttp jHttp) {
-        super(req, jHttp);
+    ReqResBodyAllowedHandler(TCPHandler tcpHandler, Request req, JHttp jHttp) {
+        super(tcpHandler, req, jHttp);
     }
 
     @Override

@@ -15,8 +15,8 @@ import java.util.Map;
  */
 class OptionsRequestHandler extends BaseReqBodyLessHandler {
 
-    OptionsRequestHandler(Request req, JHttp jHttp) {
-        super(req, jHttp);
+    OptionsRequestHandler(TCPHandler tcpHandler, Request req, JHttp jHttp) {
+        super(tcpHandler, req, jHttp);
     }
 
     @Override
@@ -31,13 +31,13 @@ class OptionsRequestHandler extends BaseReqBodyLessHandler {
                 response.append(generateRes(httpResponse));
             } else {
                 HttpResponse httpResponse = doHandle();
-                Util.requireNull(httpResponse.body(),"Response cannot include body");
+                Util.requireNull(httpResponse.body(), "Response cannot include body");
                 response.append(generateRes(httpResponse));
             }
         } catch(HttpException ex) {
             response.append(generateErrorRes(req.headers(), ex));
         }
-         send(response.toString());
+        send(response.toString());
     }
 
     private boolean isCorsPreflight(HttpHeaders headers) {

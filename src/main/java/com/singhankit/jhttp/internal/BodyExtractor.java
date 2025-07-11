@@ -1,10 +1,11 @@
 package com.singhankit.jhttp.internal;
 
 import com.singhankit.jhttp.Body;
+import com.singhankit.jhttp.Body.FilePart;
 import com.singhankit.jhttp.HttpClientException;
+import com.singhankit.jhttp.HttpHeaders;
 import com.singhankit.jhttp.HttpStatus;
 import com.singhankit.jhttp.MediaType;
-import com.singhankit.jhttp.Body.FilePart;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -16,10 +17,16 @@ import static com.singhankit.jhttp.HttpHeaders.CONTENT_TYPE;
 /**
  * @author ankitsingh
  */
- class BodyExtractor {
+class BodyExtractor {
 
-     Body extract(Request req) {
-        var contentLengthOpt = req.headers().get(CONTENT_LENGTH);
+    private final TCPHandler tcpHandler;
+
+    BodyExtractor(TCPHandler tcpHandler) {
+        this.tcpHandler = tcpHandler;
+    }
+
+    Body extract(HttpHeaders headers) {
+        var contentLengthOpt = headers.get(CONTENT_LENGTH);
         if(contentLengthOpt.isEmpty()) {
             return null;
         }
@@ -27,12 +34,10 @@ import static com.singhankit.jhttp.HttpHeaders.CONTENT_TYPE;
         if(cl <= 0) {
             return null;
         }
-        var contentType = req.headers().get(CONTENT_TYPE)
-                             .orElseThrow(() -> new HttpClientException(HttpStatus.BAD_REQUEST, "Content-Type is missing"));
+        var contentType = headers.get(CONTENT_TYPE)
+                                 .orElseThrow(() -> new HttpClientException(HttpStatus.BAD_REQUEST, "Content-Type is missing"));
         try {
-            char[] bodyChars = new char[cl];
-            int read = req.in().read(bodyChars);
-            String raw = new String(bodyChars, 0, read);
+            String raw = tcpHandler.readString(cl);
             return doExtract(contentType, raw);
         } catch(IOException e) {
             throw new HttpClientException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -53,7 +58,7 @@ import static com.singhankit.jhttp.HttpHeaders.CONTENT_TYPE;
             if(boundary != null) {
                 parseMultipart(bodyText, boundary, body);
             }
-        }else if (contentType.equals(MediaType.BINARY.value())) {
+        } else if(contentType.equals(MediaType.BINARY.value())) {
             // Treat raw body as binary file
             byte[] fileBytes = bodyText.getBytes(StandardCharsets.ISO_8859_1); // or UTF-8 if content is text
             var file = new FilePart("", fileBytes);
@@ -74,7 +79,7 @@ import static com.singhankit.jhttp.HttpHeaders.CONTENT_TYPE;
     }
 
     private String decode(String s) {
-       return URLDecoder.decode(s, StandardCharsets.UTF_8);
+        return URLDecoder.decode(s, StandardCharsets.UTF_8);
     }
 
     private String getBoundary(String contentType) {

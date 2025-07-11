@@ -20,10 +20,10 @@ abstract class BaseReqBodyHandler implements RequestHandler {
     final JHttp jHttp;
     private final TCPHandler tcpHandler;
 
-    BaseReqBodyHandler(Request req, JHttp jHttp) {
+    BaseReqBodyHandler(TCPHandler tcpHandler, Request req, JHttp jHttp) {
         this.req = req;
         this.jHttp = jHttp;
-        this.tcpHandler = new TCPHandler(req);
+        this.tcpHandler = tcpHandler;
     }
 
     HttpResponse doHandle() {
@@ -32,7 +32,7 @@ abstract class BaseReqBodyHandler implements RequestHandler {
         var request = handlerAndRequest.request;
         executeRequestInterceptors(request);
         HttpResponse httpResponse = handlerAndRequest.handler().handle(request);
-        executeResponseInterceptors(request,httpResponse);
+        executeResponseInterceptors(request, httpResponse);
         return httpResponse;
     }
 
@@ -45,13 +45,13 @@ abstract class BaseReqBodyHandler implements RequestHandler {
         }
     }
 
-    void send(String response){
+    void send(String response) {
         tcpHandler.writeSocket(response);
     }
 
-    private void executeResponseInterceptors(HttpRequest request,HttpResponse response) {
+    private void executeResponseInterceptors(HttpRequest request, HttpResponse response) {
         for(var responseInterceptor : jHttp.getResponseInterceptors()) {
-            if(responseInterceptor.intercept(request,response)) {
+            if(responseInterceptor.intercept(request, response)) {
                 continue;
             }
             break;
@@ -59,8 +59,8 @@ abstract class BaseReqBodyHandler implements RequestHandler {
     }
 
     private Body readBody() {
-        var bodyExtractor = new BodyExtractor();
-        return bodyExtractor.extract(req);
+        var bodyExtractor = new BodyExtractor(tcpHandler);
+        return bodyExtractor.extract(req.headers());
     }
 
     private HandlerAndRequest getHandlerAndRequest(Body body) {

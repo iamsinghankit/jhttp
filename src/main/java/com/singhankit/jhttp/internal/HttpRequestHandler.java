@@ -1,17 +1,15 @@
 package com.singhankit.jhttp.internal;
 
 import com.singhankit.jhttp.HttpHeaders;
+import com.singhankit.jhttp.HttpMethod;
 import com.singhankit.jhttp.JHttp;
 import com.singhankit.jhttp.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
 /**
  * @author ankitsingh
@@ -34,22 +32,25 @@ class HttpRequestHandler implements Runnable, RequestHandler {
 
     @Override
     public void handle() {
-        try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-            String requestLine = in.readLine();
+        try(TCPHandler tcpHandler = new TCPHandler(clientSocket)) {
+
+            String requestLine = tcpHandler.nextLine();
             if(Util.isEmpty(requestLine)) {
                 return;
             }
-            var request = Request.of(in, out, requestLine);
+
+            var request = createRequest(tcpHandler, requestLine);
             addRequestHeaders(request.headers());
+
             RequestHandler requestHandler = switch(request.method()) {
-                case GET -> new ResBodyHandler(request, jHttp, true);
-                case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(request, jHttp);
-                case TRACE, HEAD -> new ResBodyHandler(request, jHttp, false);
-                case OPTIONS -> new OptionsRequestHandler(request, jHttp);
+                case GET -> new ResBodyHandler(tcpHandler, request, jHttp, true);
+                case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(tcpHandler, request, jHttp);
+                case TRACE, HEAD -> new ResBodyHandler(tcpHandler, request, jHttp, false);
+                case OPTIONS -> new OptionsRequestHandler(tcpHandler, request, jHttp);
                 case UNKNOWN -> () -> {};
             };
             requestHandler.handle();
+
         } catch(IOException e) {
             LOG.error("Error occurred while handling request", e);
         } finally {
@@ -62,5 +63,13 @@ class HttpRequestHandler implements Runnable, RequestHandler {
         if(httpHeaders.get("X-Forwarded-For").isEmpty()) {
             httpHeaders.add("X-Forwarded-For", clientSocket.getInetAddress().getHostAddress());
         }
+    }
+
+    private Request createRequest(TCPHandler tcpHandler, String requestLine) throws IOException {
+        var tokenizer = new StringTokenizer(requestLine);
+        var method = HttpMethod.of(tokenizer.nextToken());
+        String path = tokenizer.nextToken();
+        var headers = new HttpHeaders(tcpHandler.readKeyValueLine());
+        return new Request(headers, path, method);
     }
 }

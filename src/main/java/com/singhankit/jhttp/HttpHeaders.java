@@ -1,7 +1,5 @@
 package com.singhankit.jhttp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,20 +23,6 @@ public class HttpHeaders implements Iterable<Map.Entry<String, String>> {
 
     public HttpHeaders() {
         this(new HashMap<>());
-    }
-
-    public static HttpHeaders of(BufferedReader in) throws IOException {
-        var headers = new HttpHeaders();
-        String line;
-        while(!(line = in.readLine()).isEmpty()) {
-            int colonPos = line.indexOf(":");
-            if(colonPos != -1) {
-                String key = line.substring(0, colonPos).trim();
-                String value = line.substring(colonPos + 1).trim();
-                headers.add(key, value);
-            }
-        }
-        return headers;
     }
 
     public HttpHeaders add(String key, String value) {
