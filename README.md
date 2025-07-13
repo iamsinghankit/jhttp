@@ -45,7 +45,7 @@ To add a dependency on JHttp using Maven, use the following:
 <dependency>
     <groupId>com.iamsinghankit</groupId>
     <artifactId>jhttp</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
  ``` 
 

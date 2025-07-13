@@ -21,23 +21,23 @@ class OptionsRequestHandler extends BaseReqBodyLessHandler {
 
     @Override
     public void handle() {
-        var response = new StringBuilder();
+        Response response;
         try {
             if(isCorsPreflight(req.headers())) {
                 var httpRequest = new HttpRequest(req.headers(), req.path(), req.method(), null, Map.of(), Map.of());
                 executeRequestInterceptors(httpRequest);
                 var httpResponse = new HttpResponse(req.headers(), HttpStatus.NO_CONTENT, null);
                 executeResponseInterceptors(httpRequest, httpResponse);
-                response.append(generateHttpResponse(httpResponse));
+                response = Response.success(httpResponse);
             } else {
                 HttpResponse httpResponse = doHandle();
                 Util.requireNull(httpResponse.body(), "Response cannot include body");
-                response.append(generateHttpResponse(httpResponse));
+                response = Response.success(httpResponse);
             }
         } catch(HttpException ex) {
-            response.append(generateHttpResponse(req.headers(), ex));
+            response = Response.error(req.headers(), ex);
         }
-        send(response.toString());
+        send(response.toHttpString());
     }
 
     private boolean isCorsPreflight(HttpHeaders headers) {

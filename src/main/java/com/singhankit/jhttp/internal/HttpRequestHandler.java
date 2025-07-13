@@ -40,8 +40,6 @@ class HttpRequestHandler implements Runnable, RequestHandler {
             }
 
             var request = createRequest(tcpHandler, requestLine);
-            addRequestHeaders(request.headers());
-
             RequestHandler requestHandler = switch(request.method()) {
                 case GET -> new ResBodyHandler(tcpHandler, request, jHttp, true);
                 case POST, PUT, PATCH, DELETE -> new ReqResBodyAllowedHandler(tcpHandler, request, jHttp);
@@ -58,18 +56,18 @@ class HttpRequestHandler implements Runnable, RequestHandler {
         }
     }
 
-
-    private void addRequestHeaders(HttpHeaders httpHeaders) {
-        if(httpHeaders.get("X-Forwarded-For").isEmpty()) {
-            httpHeaders.add("X-Forwarded-For", clientSocket.getInetAddress().getHostAddress());
-        }
-    }
-
     private Request createRequest(TCPHandler tcpHandler, String requestLine) throws IOException {
         var tokenizer = new StringTokenizer(requestLine);
         var method = HttpMethod.of(tokenizer.nextToken());
         String path = tokenizer.nextToken();
         var headers = new HttpHeaders(tcpHandler.readKeyValueLine());
+        addDefaultHeaders(headers);
         return new Request(headers, path, method);
+    }
+
+    private void addDefaultHeaders(HttpHeaders httpHeaders) {
+        if(httpHeaders.get("X-Forwarded-For").isEmpty()) {
+            httpHeaders.add("X-Forwarded-For", clientSocket.getInetAddress().getHostAddress());
+        }
     }
 }

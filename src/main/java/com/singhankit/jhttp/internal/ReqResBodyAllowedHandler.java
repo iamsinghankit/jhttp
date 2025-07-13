@@ -15,13 +15,13 @@ class ReqResBodyAllowedHandler extends BaseReqBodyHandler {
 
     @Override
     public void handle() {
-        var response = new StringBuilder();
+        Response response;
         try {
             HttpResponse httpResponse = doHandle();
-            response.append(generateHttpResponse(httpResponse));
+            response = Response.success(httpResponse);
         } catch(HttpException ex) {
-            response.append(generateHttpResponse(req.headers(), ex));
+            response = Response.error(req.headers(), ex);
         }
-        send(response.toString());
+        send(response.toHttpString());
     }
 }
