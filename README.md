@@ -17,6 +17,7 @@ A lightweight, extensible, high-performance HTTP server built from scratch using
 | ✅ CORS Support              | Adds proper headers and handles `OPTIONS` preflight      |
 | ✅ Body Parsers              | Handles JSON, form-data, file uploads, and octet streams |
 | ✅ Modular Architecture      | Easily plug in routes, interceptors, and response logic  |
+| ✅ Configuration             | Externalize configuration from 'config.properties' file  |
 
 ---
 
@@ -45,7 +46,7 @@ To add a dependency on JHttp using Maven, use the following:
 <dependency>
     <groupId>com.iamsinghankit</groupId>
     <artifactId>jhttp</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
  ``` 
 

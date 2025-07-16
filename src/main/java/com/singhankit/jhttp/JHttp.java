@@ -1,5 +1,6 @@
 package com.singhankit.jhttp;
 
+import com.singhankit.jhttp.config.ConfigManager;
 import com.singhankit.jhttp.interceptor.CorsInterceptor;
 import com.singhankit.jhttp.interceptor.CorsInterceptor.CorsHeader;
 import com.singhankit.jhttp.interceptor.JsonLoggingInterceptor;
@@ -13,6 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
+import static com.singhankit.jhttp.config.ConfigSettings.SERVER_PORT;
+import static com.singhankit.jhttp.config.ConfigSettings.SERVER_THREAD_NAME;
 import static java.util.Comparator.comparingInt;
 import static java.util.Objects.requireNonNull;
 
@@ -38,18 +41,12 @@ public class JHttp {
     }
 
     public static JHttpBuilder defaults() {
-        int defaultPort = 9090;
-        String defaultThreadName = "jhttp-thread-";
+        ConfigManager config = Context.getConfig();
         return new JHttpBuilder()
-                .port(defaultPort)
+                .port(config.getInt(SERVER_PORT, 9090))
                 .serverThreadPool(Executors.newThreadPerTaskExecutor(Thread.ofVirtual()
-                                                                           .name(defaultThreadName, 1)
+                                                                           .name(config.getString(SERVER_THREAD_NAME,"jhttp-thread-"), 1)
                                                                            .factory()));
-    }
-
-
-    public static JHttpBuilder of() {
-        return new JHttpBuilder();
     }
 
     public int getPort() {
@@ -103,7 +100,7 @@ public class JHttp {
         private final List<RequestInterceptor> requestInterceptors;
         private final List<ResponseInterceptor> responseInterceptors;
 
-        JHttpBuilder() {
+        private JHttpBuilder() {
             this.requestMappings = new ArrayList<>();
             this.requestInterceptors = new ArrayList<>();
             this.responseInterceptors = new ArrayList<>();
