@@ -7,25 +7,27 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
+import static com.singhankit.jhttp.config.ConfigHelper.getFile;
+
 /**
  * @author Ankit Singh
  */
 class FilesystemConfig implements Config {
 
-    private final Path path;
+    private String profile;
 
-    FilesystemConfig(Path path) {
-        this.path = path;
+    FilesystemConfig(String profile) {
+        this.profile = profile;
     }
 
     FilesystemConfig() {
-        this(Path.of(CONFIG_FILE));
+        this("");
     }
-
     @Override
     public Optional<InputStream> read()  {
         try {
-            return Optional.of(Files.newInputStream(path, StandardOpenOption.READ));
+            Path file  = Path.of(getFile(profile));
+            return Optional.of(Files.newInputStream(file, StandardOpenOption.READ));
         }catch(IOException ex){
             return Optional.empty();
         }

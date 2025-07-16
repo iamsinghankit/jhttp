@@ -7,17 +7,17 @@ A lightweight, extensible, high-performance HTTP server built from scratch using
 
 ## 🔧 Features
 
-| Feature                     | Description                                              |
-|-----------------------------|----------------------------------------------------------|
-| ✅ HTTP                      | Supports plain connections                               |
-| ✅ GET, POST, PUT, DELETE    | Handles all common HTTP methods                          |
-| ✅ Routing with Parameters   | Simple path-based routing with query/path param parsing  |
-| ✅ Interceptors (Middleware) | CORS, Auth, IP Whitelist, Rate Limiting, Json logging    |
-| ✅ Basic Auth                | Basic support for `Authorization: Basic` token header    |
-| ✅ CORS Support              | Adds proper headers and handles `OPTIONS` preflight      |
-| ✅ Body Parsers              | Handles JSON, form-data, file uploads, and octet streams |
-| ✅ Modular Architecture      | Easily plug in routes, interceptors, and response logic  |
-| ✅ Configuration             | Externalize configuration from 'config.properties' file  |
+| Feature                     | Description                                                          |
+|-----------------------------|----------------------------------------------------------------------|
+| ✅ HTTP                      | Supports plain connections                                           |
+| ✅ GET, POST, PUT, DELETE    | Handles all common HTTP methods                                      |
+| ✅ Routing with Parameters   | Simple path-based routing with query/path param parsing              |
+| ✅ Interceptors (Middleware) | CORS, Auth, IP Whitelist, Rate Limiting, Json logging                |
+| ✅ Basic Auth                | Basic support for `Authorization: Basic` token header                |
+| ✅ CORS Support              | Adds proper headers and handles `OPTIONS` preflight                  |
+| ✅ Body Parsers              | Handles JSON, form-data, file uploads, and octet streams             |
+| ✅ Modular Architecture      | Easily plug in routes, interceptors, and response logic              |
+| ✅ Configuration             | Externalize configuration in 'config.properties' file, profile based |
 
 ---
 
@@ -32,6 +32,7 @@ cd jhttp
 
 mvn clean install
 ```
+---
 ## Adding JHttp to your build
 
 To add a dependency on JHttp using Maven, use the following:
@@ -63,8 +64,6 @@ JHttp jHttp = JHttp.defaults()
                            .build();
       jHttp.start();
 ```
-
----
 
 ### Sample `curl` Request
 
@@ -125,9 +124,27 @@ Handles:
 | `RateLimitInterceptor`   | Basic per-IP request limiting  |
 | `JsonLoggingInterceptor` | Request, Response json logging | 
 
+---
+## 🔄 Configuration Support
 
+config.properties
+```properties
+jhttp.server.port=9091
+jhttp.profile.active=dev
+```
+config-dev.properties
+```properties
+app.name=MyApp
+```
+usage in code:
+```java
 
+import com.singhankit.jhttp.Context;
 
+ConfigManager config = Context.getConfig();
+String value = config.getString("app.name");
+```
+---
 ## 📜 License
 
 This project is licensed under the [Apache License 2.0](LICENSE).  
